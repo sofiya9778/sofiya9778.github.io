@@ -1595,10 +1595,21 @@ buildSideStrip(stripRight, 'right');
 let lightsOn = true;
 function toggleLights() {
   lightsOn = !lightsOn;
+  const body = document.body;
+
+  if (lightsOn) {
+    body.classList.remove('lights-off');
+    stopStars();
+  } else {
+    body.classList.add('lights-off');
+    startStars();
+  }
+
   [stripTop, stripLeft, stripRight].forEach(s => {
     if (lightsOn) s.classList.remove('off');
     else s.classList.add('off');
   });
+
   const btn = document.getElementById('lights-toggle');
   if (lightsOn) {
     btn.classList.remove('off-state');
