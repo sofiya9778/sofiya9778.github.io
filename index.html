@@ -1462,7 +1462,52 @@ const WARM_COLORS = [
   {bg:'#FFEAA0', glow:'rgba(255,235,120,0.5)'},
   {bg:'#FFD080', glow:'rgba(255,200,80,0.5)'},
 ];
+// ── STAR CANVAS ──
+const starCanvas = document.getElementById('star-canvas');
+const sCtx = starCanvas.getContext('2d');
+let stars = [];
+let starAnimId = null;
 
+function resizeStarCanvas() {
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+}
+resizeStarCanvas();
+window.addEventListener('resize', resizeStarCanvas);
+
+function startStars() {
+  stars = [];
+  for (let i = 0; i < 120; i++) {
+    stars.push({
+      x: Math.random() * starCanvas.width,
+      y: Math.random() * starCanvas.height * 0.7,
+      r: Math.random() * 1.5 + 0.2,
+      twinkle: Math.random() * Math.PI * 2,
+      speed: Math.random() * 0.018 + 0.006,
+      base: Math.random() * 0.5 + 0.2
+    });
+  }
+  animateStars();
+}
+
+function animateStars() {
+  sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  stars.forEach(s => {
+    s.twinkle += s.speed;
+    const a = s.base + Math.sin(s.twinkle) * 0.3;
+    sCtx.beginPath();
+    sCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    sCtx.fillStyle = `rgba(255,235,160,${a})`;
+    sCtx.fill();
+  });
+  starAnimId = requestAnimationFrame(animateStars);
+}
+
+function stopStars() {
+  if (starAnimId) cancelAnimationFrame(starAnimId);
+  sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  stars = [];
+}
 function makeGlass(size, c, rotate) {
   const g = document.createElement('div');
   g.className = 'bulb-glass lit';
